@@ -28,12 +28,12 @@ from paddle.nn import AdaptiveAvgPool2D, MaxPool2D
 from paddle.nn.initializer import KaimingNormal, Constant, Uniform
 
 import math
-#from ....utils.save_load import load_dygraph_pretrain, load_dygraph_pretrain_from_url
+from ....utils.save_load import load_dygraph_pretrain, load_dygraph_pretrain_from_url
 
 
 MODEL_URLS = {
-    "VoVNet57": "",
-	"VoVNet39": ""
+    "VoVNet57": "test",
+	"VoVNet39": "test"
 }
 
 __all__ = list(MODEL_URLS.keys())
@@ -91,7 +91,7 @@ class OneShotAggLayer(nn.Layer):
 
         # feature aggregation
         in_channel = in_ch + layer_per_block * stage_ch
-        self.concat = ConvBNLayer(in_channel, concat_ch, 1, name='{}_{}'.format(name, 'concat'))
+        self.concat = ConvBNLayer(in_channel, concat_ch, 1, padding=0, name='{}_{}'.format(name, 'concat'))
 
     def forward(self, inputs):
         identity_feat = inputs
@@ -149,7 +149,7 @@ class VoVNet(nn.Layer):
 
         stem_out_ch = [128]
         in_ch_list = stem_out_ch + concat_ch[:-1]
-        self.osa_stage = nn.Sequential(*[
+        self.osa_stage = nn.LayerList([
             OneShotAggBlock(in_ch_list[i], stage_ch[i], concat_ch[i], block_per_stage[i], layer_per_block, i+2)
         for i in range(4)])
         self._pool = AdaptiveAvgPool2D([1,1])
@@ -163,40 +163,37 @@ class VoVNet(nn.Layer):
 
     def forward(self, inputs):
         x = self.stem(inputs)
-        x = self.osa_stage(x)
+        for layer in self.osa_stage:
+            x = layer(x)
         x = self._pool(x).flatten(start_axis=1)
         x = self.classifier(x)
         return x
 
 
-#def _load_pretrained(pretrained, model, model_url, use_ssld=False):
-#    if pretrained is False:
-#        pass
-#    elif pretrained is True:
-#        load_dygraph_pretrain_from_url(model, model_url, use_ssld=use_ssld)
-#    elif isinstance(pretrained, str):
-#        load_dygraph_pretrain(model, pretrained)
-#    else:
-#        raise RuntimeError(
-#            "pretrained type is not available. Please use `string` or `boolean` type."
-#        )
+def _load_pretrained(pretrained, model, model_url, use_ssld=False):
+    if pretrained is False:
+        pass
+    elif pretrained is True:
+        load_dygraph_pretrain_from_url(model, model_url, use_ssld=use_ssld)
+    elif isinstance(pretrained, str):
+        load_dygraph_pretrain(model, pretrained)
+    else:
+        raise RuntimeError(
+            "pretrained type is not available. Please use `string` or `boolean` type."
+        )
 
 
 def VoVNet57(pretrained=False, use_ssld=False, **kwargs):
     model = VoVNet(stage_ch=[128, 160, 192, 224], concat_ch=[256, 512, 768, 1024], block_per_stage=[1,1,4,3], layer_per_block=5, **kwargs)
-#    _load_pretrained(
-#        pretrained, model, MODEL_URLS["VoVNet57"], use_ssld=use_ssld)
+    _load_pretrained(
+        pretrained, model, MODEL_URLS["VoVNet57"], use_ssld=use_ssld)
     return model
 
 
 def VoVNet39(pretrained=False, use_ssld=False, **kwargs):
     model = VoVNet(stage_ch=[128, 160, 192, 224], concat_ch=[256, 512, 768, 1024], block_per_stage= [1,1,2,2], layer_per_block=5, **kwargs)
-#    _load_pretrained(
-#        pretrained, model, MODEL_URLS["VoVNet39"], use_ssld=use_ssld
-#    )
+    _load_pretrained(
+        pretrained, model, MODEL_URLS["VoVNet39"], use_ssld=use_ssld
+    )
     return model
 
-
-net = VoVNet39()
-print(net)
-print(net(paddle.rand(shape=[2,3,244,244])))
