@@ -1,8 +1,8 @@
 ===========================train_params===========================
 model_name:VoVNet39
-python:python
+python:python3.7
 gpu_list:0|0,1
--o Global.device:cpu
+-o Global.device:gpu
 -o Global.auto_cast:null
 -o Global.epochs:lite_train_lite_infer=2|whole_train_whole_infer=120
 -o Global.output_dir:./output/
