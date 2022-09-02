@@ -60,7 +60,7 @@ PaddleClas/dataset/ILSVRC2012/
 |      Model            |  Env   | Epoch       |  Batch Size  | Learning Rate  | Top-1            |   Top-5       |
 | ---------------  | --------------- |  ---------------  | --------------- | --------------- | --------------- | --------------- | 
 |  VoVNet.pytorch (原论文) | - | 90  |  256  | [0.1, 0.01, 0.001, 0.0001], decrease every 30 epoch   | 0.7677  | 0.9343 |
-|  paddle-vovnet (实现) |  4*V100 | 90  |  64\*4   |  [0.1, 0.01, 0.001, 0.0001], decrease every 30 epoch | <b>0.7698</b>    | <b>0.9382</b> |
+|  paddle-vovnet (实现) |  4*V100 | 90  |  64\*4   |  [0.1, 0.01, 0.001, 0.0001], decrease every 30 epoch | <b>0.7699</b>    | <b>0.9437</b> |
 |  paddle-vovnet (实现) |  1*1080 Ti | 93  |  64\*1  | [0.025, 0.01, 0.004, 0.0016], decrase every 30 epoch  |  0.7605   | 0.9355 |
 
 - 训练权重及训练日志下载地址：[下载](https://share.weiyun.com/4tfpuPXT)
@@ -152,3 +152,5 @@ bash test_tipc/test_train_inference_python.sh ./test_tipc/config/VoVNet/VoVNet39
 **参考论文:** [An Energy and GPU-Computation Efficient Backbone Network for Real-Time Object Detection](https://arxiv.org/pdf/1904.09730v1.pdf)
 
 **参考repo:** [stigma0617/VoVNet.pytorch](https://github.com/stigma0617/VoVNet.pytorch)
+
+感谢[Baidu Aistudio](https://aistudio.baidu.com/aistudio/index)的算力支持

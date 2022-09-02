@@ -33,7 +33,7 @@ from ....utils.save_load import load_dygraph_pretrain, load_dygraph_pretrain_fro
 
 MODEL_URLS = {
     "VoVNet57": "test",
-	"VoVNet39": "test"
+    "VoVNet39": "test"
 }
 
 __all__ = list(MODEL_URLS.keys())
