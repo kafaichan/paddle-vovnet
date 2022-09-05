@@ -27,6 +27,7 @@
 
 ![vovnet_osa](img/vovnet_osa.PNG)
 
+目前，基于深度学习的目标检测模型都会使用CNN分类网络作为模型骨干(backbone)以提取图像特征，如YOLO使用DarkNet, Faster R-CNN使用了ResNet。由于DenseNet使用密集连接(dense connection)聚合不同receptive field特征层，所以保留了中间特征层的信息，它通过特征重用使得模型的大小和FLOPS大大降低，但是实验证明，用DenseNet做骨干网络更加耗时也增加了能耗：密集连接架构使得输入channel线性递增，导致了更多的内存访问消耗，进而导致更多的计算消耗和能耗，为了解决这个问题，作者提出了VoVNet。
 
 在此非常感谢`stigma0617`等人贡献的[stigma0617/VoVNet.pytorch](https://github.com/stigma0617/VoVNet.pytorch)，提高了本repo复现论文的效率。
 
